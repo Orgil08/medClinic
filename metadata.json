@@ -1,0 +1,6 @@
+{
+  "name": "Солонго нүдний эмнэлэг | Solongo Eye Hospital",
+  "description": "Монгол хүний эрүүл нүдний төлөө - Солонго нүдний эмнэлгийн албан ёсны вебсайт. Үзлэг оношилгоо, мэс засал, хараа зүй, цаг захиалга, салбаруудын мэдээлэл.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
