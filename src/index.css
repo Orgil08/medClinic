@@ -1,24 +1,102 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @layer base {
+  :root {
+    --primary-blue: #1769AA;
+    --dark-blue: #123B63;
+    --light-blue: #EAF4FC;
+    --main-text: #263747;
+    --secondary-text: #64748B;
+    --site-border: #E2E8F0;
+  }
+
+  .dark {
+    --primary-blue: #38bdf8;
+    --dark-blue: #020617;
+    --light-blue: #0f172a;
+    --main-text: #f8fafc;
+    --secondary-text: #94a3b8;
+    --site-border: #1e293b;
+    color-scheme: dark;
+  }
+
   html {
     scroll-behavior: smooth;
-    font-family: 'Inter', 'Roboto', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    color: #263747;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  html.dark body {
+    background-color: #020617;
+    color: #f8fafc;
   }
 }
 
-/* Custom scrollbar for clean healthcare UI */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-::-webkit-scrollbar-track {
-  background: #f1f5f9;
-}
-::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+@layer utilities {
+  /* Unified 1280px Container System across desktop, tablet, and mobile */
+  .site-container {
+    width: 100%;
+    max-width: 1280px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem; /* 16px on mobile (360px - 430px) */
+    padding-right: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .site-container {
+      padding-left: 1.5rem; /* 24px on tablet (640px - 1023px) */
+      padding-right: 1.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .site-container {
+      padding-left: 2rem; /* 32px on desktop (1024px - 1440px+) */
+      padding-right: 2rem;
+    }
+  }
+
+  /* Consistent 8px spacing standard utilities */
+  .btn-standard {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    height: 46px;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    border-radius: 0.75rem;
+    transition: all 0.2s ease-in-out;
+  }
+
+  .input-standard {
+    width: 100%;
+    min-height: 44px;
+    height: 46px;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    font-size: 0.875rem;
+    border-radius: 0.75rem;
+    border: 1px solid #E2E8F0;
+    background-color: #FFFFFF;
+    color: #263747;
+    transition: all 0.15s ease-in-out;
+  }
+
+  .input-standard:focus {
+    outline: none;
+    border-color: #1769AA;
+    box-shadow: 0 0 0 3px rgba(23, 105, 170, 0.15);
+  }
 }

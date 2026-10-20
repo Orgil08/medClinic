@@ -1,4 +1,9 @@
-export type ServiceCategory = 'diagnostic' | 'treatment' | 'surgery' | 'pediatric' | 'refraction';
+export type ServiceCategory = 'all' | 'diagnostic' | 'surgery' | 'treatment';
+
+export interface ServiceFAQ {
+  question: string;
+  answer: string;
+}
 
 export interface ServiceItem {
   id: string;
@@ -6,7 +11,7 @@ export interface ServiceItem {
   title: string;
   shortDesc: string;
   fullDesc: string;
-  category: ServiceCategory;
+  category: string;
   categoryLabel: string;
   iconName: string;
   badge?: string;
@@ -16,7 +21,7 @@ export interface ServiceItem {
   procedures: string[];
   preparationTips: string[];
   estimatedDuration: string;
-  faqs: { question: string; answer: string }[];
+  faqs: ServiceFAQ[];
 }
 
 export interface Doctor {
@@ -32,6 +37,12 @@ export interface Doctor {
   isConsultant?: boolean;
 }
 
+export interface BranchHours {
+  weekdays: string;
+  saturday: string;
+  sunday: string;
+}
+
 export interface Branch {
   id: string;
   name: string;
@@ -41,11 +52,7 @@ export interface Branch {
   landmark: string;
   phones: string[];
   email: string;
-  hours: {
-    weekdays: string;
-    saturday: string;
-    sunday: string;
-  };
+  hours: BranchHours;
   googleMapsUrl: string;
   busRoutes: string;
   isMain: boolean;
@@ -55,7 +62,7 @@ export interface NewsItem {
   id: string;
   slug: string;
   title: string;
-  category: 'Зарлал' | 'Мэдээ' | 'Эрүүл мэнд' | 'Аян';
+  category: string;
   summary: string;
   content: string[];
   publishedDate: string;
@@ -71,20 +78,6 @@ export interface HealthAdvice {
   summary: string;
   tips: string[];
   detailedContent: string;
-  recommendedAge?: string;
-}
-
-export interface ContactFormData {
-  fullName: string;
-  contact: string;
-  category: 'Санал хүсэлт' | 'Үйлчилгээ лавлах' | 'Цаг захиалгын тусламж' | 'Талархал';
-  message: string;
-  consent: boolean;
-}
-
-export interface FormValidationResult {
-  isValid: boolean;
-  errors: Partial<Record<keyof ContactFormData, string>>;
 }
 
 export interface Testimonial {
@@ -93,10 +86,48 @@ export interface Testimonial {
   ageOrContext: string;
   serviceReceived: string;
   branch: string;
-  rating: number; // 1-5
+  rating: number;
   date: string;
-  content: string;
   verified: boolean;
   highlight: string;
+  content: string;
+}
+
+export type FAQCategory = 'all' | 'insurance' | 'surgery' | 'eye-care' | 'pediatric';
+
+export interface FAQItem {
+  id: string;
+  category: string;
+  categoryLabel: string;
+  highlightTag?: string;
+  question: string;
+  answer: string;
+}
+
+export interface FeedbackSubmission {
+  name: string;
+  contact: string;
+  message: string;
+  source: 'home' | 'contact';
+}
+
+export interface FeedbackResponse {
+  success: boolean;
+  message: string;
+  deliveredEmail?: string;
+  timestamp?: string;
+}
+
+export interface ContactFormData {
+  fullName: string;
+  contact: string;
+  category?: string;
+  message: string;
+  consent?: boolean;
+}
+
+export interface FormValidationResult {
+  isValid: boolean;
+  errors: Partial<Record<keyof ContactFormData, string>>;
 }
 

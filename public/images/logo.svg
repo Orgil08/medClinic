@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 140" width="540" height="140" fill="none">
+  <defs>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&amp;display=swap");
+      .brand-title {
+        font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-weight: 900;
+        font-size: 58px;
+        fill: #005FA8;
+        letter-spacing: -0.5px;
+      }
+      .brand-sub {
+        font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-weight: 700;
+        font-size: 13.5px;
+        fill: #005FA8;
+        letter-spacing: 6.2px;
+      }
+    </style>
+  </defs>
+
+  <!-- Eye Graphic Symbol -->
+  <g id="logo-eye" transform="translate(6, 10)">
+    <!-- Eye Outer Contour (Blue #005FA8) -->
+    <!-- Top Eyelid: Smooth elongated arc -->
+    <path d="M 16 60 C 44 14, 134 14, 164 60" 
+          stroke="#005FA8" 
+          stroke-width="7" 
+          stroke-linecap="round" 
+          stroke-linejoin="round" />
+    
+    <!-- Bottom Eyelid -->
+    <path d="M 16 60 C 44 106, 134 106, 164 60" 
+          stroke="#005FA8" 
+          stroke-width="7" 
+          stroke-linecap="round" 
+          stroke-linejoin="round" />
+
+    <!-- 1. Left Amber Wave (#E79D19) -->
+    <path d="M 64 36 C 46 48, 46 72, 62 84" 
+          stroke="#E79D19" 
+          stroke-width="8" 
+          stroke-linecap="round" />
+
+    <!-- 2. Center Deep Blue S-Curve Ribbon (#0B4E8C) -->
+    <path d="M 88 20 C 72 40, 96 74, 82 100" 
+          stroke="#0B4E8C" 
+          stroke-width="8.5" 
+          stroke-linecap="round" />
+
+    <!-- 3. Right Turquoise Wave (#00A89D) -->
+    <path d="M 116 36 C 134 48, 134 72, 118 84" 
+          stroke="#00A89D" 
+          stroke-width="8" 
+          stroke-linecap="round" />
+
+    <!-- 4. Lower Turquoise Underline Accent (#00A89D) -->
+    <path d="M 102 98 C 122 96, 142 88, 154 74" 
+          stroke="#00A89D" 
+          stroke-width="5.5" 
+          stroke-linecap="round" />
+  </g>
+
+  <!-- Typography -->
+  <g transform="translate(196, 0)">
+    <text x="0" y="74" class="brand-title">СОЛОНГО</text>
+    <text x="3" y="106" class="brand-sub">Н Ү Д Н И Й   Э М Н Э Л Э Г</text>
+  </g>
+</svg>

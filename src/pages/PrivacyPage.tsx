@@ -5,22 +5,22 @@ export const PrivacyPage: React.FC = () => {
   return (
     <div className="py-10 sm:py-14 max-w-4xl mx-auto px-4 sm:px-8 space-y-8">
       <div className="space-y-3">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-50 text-teal-700 text-xs font-semibold">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/60 text-[#1769AA] dark:text-sky-300 text-xs font-semibold border border-blue-200/60 dark:border-blue-900/60">
           <ShieldCheck className="w-4 h-4" />
           <span>Эмнэлгийн ёс зүй & Нууцлал</span>
         </div>
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
           Нууцлалын бодлого
         </h1>
-        <p className="text-slate-600 text-sm">
+        <p className="text-slate-600 dark:text-slate-400 text-sm">
           Сүүлд шинэчлэгдсэн огноо: 2025 оны 1-р сар
         </p>
       </div>
 
-      <div className="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-10 shadow-sm space-y-6 text-slate-700 text-sm sm:text-base leading-relaxed">
+      <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 p-6 sm:p-10 shadow-sm space-y-6 text-slate-700 dark:text-slate-300 text-sm sm:text-base leading-relaxed">
         <section className="space-y-3">
-          <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-            <Lock className="w-5 h-5 text-teal-600" />
+          <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <Lock className="w-5 h-5 text-[#1769AA] dark:text-sky-400" />
             <span>1. Ерөнхий үндэслэл</span>
           </h2>
           <p>
@@ -29,14 +29,14 @@ export const PrivacyPage: React.FC = () => {
         </section>
 
         <section className="space-y-3">
-          <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-            <FileText className="w-5 h-5 text-teal-600" />
+          <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <FileText className="w-5 h-5 text-[#1769AA] dark:text-sky-400" />
             <span>2. Цуглуулах мэдээллийн төрөл</span>
           </h2>
           <p>
             Манай цахим хуудас болон цаг захиалгын систем (Medsoft)-ээр дамжуулан дараах мэдээллийг зөвхөн үйлчилгээ үзүүлэх зорилгоор цуглуулна:
           </p>
-          <ul className="list-disc pl-5 space-y-1.5 text-slate-600 text-xs sm:text-sm">
+          <ul className="list-disc pl-5 space-y-1.5 text-slate-600 dark:text-slate-400 text-xs sm:text-sm">
             <li>Үйлчлүүлэгчийн овог, нэр, регистрийн дугаар (үзлэгийн карт нээх, ЭМД шалгах зорилгоор)</li>
             <li>Холбоо барих утасны дугаар, и-мэйл хаяг (цаг баталгаажуулах, сануулга илгээх)</li>
             <li>Эрүүл мэндийн даатгалын шимтгэл төлөлтийн төлөв</li>
@@ -44,8 +44,8 @@ export const PrivacyPage: React.FC = () => {
         </section>
 
         <section className="space-y-3">
-          <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-            <ShieldCheck className="w-5 h-5 text-teal-600" />
+          <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <ShieldCheck className="w-5 h-5 text-[#1769AA] dark:text-sky-400" />
             <span>3. Мэдээллийн аюулгүй байдал</span>
           </h2>
           <p>
@@ -54,8 +54,8 @@ export const PrivacyPage: React.FC = () => {
         </section>
 
         <section className="space-y-3">
-          <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-            <CheckCircle2 className="w-5 h-5 text-teal-600" />
+          <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <CheckCircle2 className="w-5 h-5 text-[#1769AA] dark:text-sky-400" />
             <span>4. Холбоо барих</span>
           </h2>
           <p>

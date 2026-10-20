@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 140" width="540" height="140" fill="none">
+  <defs>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&amp;display=swap");
+      .brand-title-w {
+        font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-weight: 900;
+        font-size: 58px;
+        fill: #FFFFFF;
+        letter-spacing: -0.5px;
+      }
+      .brand-sub-w {
+        font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-weight: 700;
+        font-size: 13.5px;
+        fill: #93C5FD;
+        letter-spacing: 6.2px;
+      }
+    </style>
+  </defs>
+  <g transform="translate(6, 10)">
+    <path d="M 16 60 C 44 14, 134 14, 164 60" stroke="#38BDF8" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M 16 60 C 44 106, 134 106, 164 60" stroke="#38BDF8" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M 64 36 C 46 48, 46 72, 62 84" stroke="#FBBF24" stroke-width="8" stroke-linecap="round" />
+    <path d="M 88 20 C 72 40, 96 74, 82 100" stroke="#60A5FA" stroke-width="8.5" stroke-linecap="round" />
+    <path d="M 116 36 C 134 48, 134 72, 118 84" stroke="#2DD4BF" stroke-width="8" stroke-linecap="round" />
+    <path d="M 102 98 C 122 96, 142 88, 154 74" stroke="#2DD4BF" stroke-width="5.5" stroke-linecap="round" />
+  </g>
+  <g transform="translate(196, 0)">
+    <text x="0" y="74" class="brand-title-w">СОЛОНГО</text>
+    <text x="3" y="106" class="brand-sub-w">Н Ү Д Н И Й   Э М Н Э Л Э Г</text>
+  </g>
+</svg>

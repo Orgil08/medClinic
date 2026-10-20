@@ -1,307 +1,321 @@
 import React, { useState } from 'react';
-import { validateContactForm } from '../utils/validation.ts';
-import { HOSPITAL_INFO, BRANCHES } from '../utils/hospitalData.ts';
-import type { ContactFormData } from '../types/index.ts';
 import {
   Phone,
   Mail,
   MapPin,
   Clock,
   Send,
+  MessageSquare,
+  ShieldCheck,
+  Calendar,
+  ExternalLink,
+  Building,
   CheckCircle2,
   AlertCircle,
-  ExternalLink,
-  ShieldCheck,
-  MessageSquare
+  HelpCircle,
+  Sparkles,
 } from 'lucide-react';
+import { HOSPITAL_INFO, BRANCHES } from '../utils/hospitalData.ts';
+import { useToast } from '../context/ToastContext.tsx';
+import { sendFeedbackApi, validateFeedbackInput } from '../utils/feedbackService.ts';
 
 interface ContactPageProps {
   onOpenAppointment: () => void;
 }
 
 export const ContactPage: React.FC<ContactPageProps> = ({ onOpenAppointment }) => {
-  const [formData, setFormData] = useState<ContactFormData>({
-    fullName: '',
-    contact: '',
-    category: 'Санал хүсэлт',
-    message: '',
-    consent: false,
-  });
+  const { toast } = useToast();
 
-  const [errors, setErrors] = useState<Partial<Record<keyof ContactFormData, string>>>({});
+  const [name, setName] = useState('');
+  const [contact, setContact] = useState('');
+  const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submittedSuccessfully, setSubmittedSuccessfully] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
+  const [submittedSuccess, setSubmittedSuccess] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const validation = validateContactForm(formData);
+    setFormError(null);
 
-    if (!validation.isValid) {
-      setErrors(validation.errors);
+    const validation = validateFeedbackInput({ name, contact, message });
+    if (!validation.valid) {
+      const errorMsg = validation.error || 'Маягтын мэдээлэл дутуу эсвэл буруу байна.';
+      setFormError(errorMsg);
+      toast.error('Маягт дутуу байна', errorMsg);
       return;
     }
 
-    setErrors({});
     setIsSubmitting(true);
-
-    // Simulate safe client receipt and acknowledgement
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setSubmittedSuccessfully(true);
-      setFormData({
-        fullName: '',
-        contact: '',
-        category: 'Санал хүсэлт',
-        message: '',
-        consent: false,
+    try {
+      const res = await sendFeedbackApi({
+        name,
+        contact,
+        message,
+        source: 'contact',
       });
-    }, 600);
+
+      toast.success(
+        'Санал хүсэлтийг амжилттай илгээлээ!',
+        'Бид таны санал хүсэлтийг хүлээн авч, контакт хаяг руу хариу холбогдох болно.'
+      );
+      setSubmittedSuccess(true);
+      setName('');
+      setContact('');
+      setMessage('');
+    } catch (err: any) {
+      const errorMsg =
+        err?.message ||
+        'Сервертэй холбогдоход алдаа гарлаа. Та дахин оролдоно уу эсвэл утсаар холбогдоно уу.';
+      setFormError(errorMsg);
+      toast.error('Илгээхэд алдаа гарлаа', errorMsg);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
-    <div className="py-10 sm:py-14 max-w-7xl mx-auto px-4 sm:px-8 space-y-12">
-      {/* Header */}
+    <div className="space-y-12 py-10 sm:py-14 site-container">
+      {/* Page Header */}
       <div className="text-center max-w-3xl mx-auto space-y-4">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-teal-50 text-teal-700 text-xs font-semibold">
-          <MessageSquare className="w-4 h-4" />
+        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-blue-50 dark:bg-blue-950/60 text-[#1769AA] dark:text-sky-300 text-xs font-semibold border border-blue-200/60 dark:border-blue-900/60">
+          <Phone className="w-4 h-4" />
           <span>Холбоо барих</span>
         </div>
-        <h1 className="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">
+        <h1 className="text-3xl sm:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight">
           Бидэнтэй холбогдох
         </h1>
-        <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-          Танд асууж тодруулах зүйл, санал хүсэлт байвал доорх маягтыг бөглөн илгээнэ үү. Манай захиргааны ажилтан тантай ажлын цагаар эргэн холбогдох болно.
+        <p className="text-slate-600 dark:text-slate-300 text-base sm:text-lg leading-relaxed">
+          Та манай эмнэлгийн салбаруудтай шууд холбогдох, цаг захиалах эсвэл доорх маягтаар санал хүсэлт, асуултаа илгээх боломжтой.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-        {/* Left Column: Feedback Form */}
-        <div className="lg:col-span-7 bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-10 shadow-sm">
-          <h2 className="text-xl sm:text-2xl font-bold text-slate-900 mb-2">
-            Санал хүсэлтийн маягт
-          </h2>
-          <p className="text-xs sm:text-sm text-slate-500 mb-6">
-            Өвчний онош, түүх зэрэг эмзэг хувийн эрүүл мэндийн мэдээллээ энд бичихгүй байхыг анхаарна уу.
-          </p>
-
-          {submittedSuccessfully ? (
-            <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-6 sm:p-8 text-center space-y-4 animate-in fade-in duration-200">
-              <div className="w-12 h-12 rounded-full bg-emerald-100 text-emerald-700 mx-auto flex items-center justify-center">
-                <CheckCircle2 className="w-6 h-6" />
-              </div>
-              <h3 className="text-lg sm:text-xl font-bold text-emerald-950">
-                Таны санал хүсэлтийг амжилттай хүлээн авлаа!
-              </h3>
-              <p className="text-xs sm:text-sm text-emerald-800 max-w-md mx-auto">
-                Бид таны илгээсэн мэдээлэлтэй танилцаж, шаардлагатай тохиолдолд таны холбоо барих дугаар эсвэл и-мэйлээр эргэн хариулах болно.
-              </p>
-              <button
-                type="button"
-                onClick={() => setSubmittedSuccessfully(false)}
-                className="px-5 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white font-semibold text-xs rounded-xl transition-colors cursor-pointer"
-              >
-                Дахин хүсэлт илгээх
-              </button>
+      {/* Main Grid: Form & Info */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        {/* Left Column: Real Feedback Form */}
+        <div className="lg:col-span-7 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 p-6 sm:p-10 shadow-sm space-y-6">
+          <div className="space-y-2">
+            <div className="inline-flex items-center gap-2 text-xs font-bold text-[#1769AA] dark:text-sky-400 uppercase tracking-wider">
+              <MessageSquare className="w-4 h-4" />
+              <span>Санал хүсэлт илгээх</span>
             </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-5" noValidate>
-              {/* Full Name */}
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
+              Таны санал бодол бидэнд үнэтэй
+            </h2>
+            <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
+              Үйлчилгээний чанар, эмч ажилтнуудын харилцаа, санал хүсэлтийн талаарх мэдээллийг бидэнд илгээнэ үү. Хүсэлтийг эмнэлгийн захиргааны шуудан ({HOSPITAL_INFO.email}) руу шууд илгээнэ.
+            </p>
+          </div>
+
+          {formError && (
+            <div className="p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800/60 flex items-start gap-3 text-rose-800 dark:text-rose-200 text-sm">
+              <AlertCircle className="w-5 h-5 shrink-0 text-rose-600 dark:text-rose-400 mt-0.5" />
               <div>
-                <label htmlFor="fullName" className="block text-xs sm:text-sm font-semibold text-slate-800 mb-1.5">
-                  Овог, нэр <span className="text-rose-500">*</span>
-                </label>
-                <input
-                  id="fullName"
-                  type="text"
-                  placeholder="Жишээ: Б. Болдбаатар"
-                  value={formData.fullName}
-                  onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                  className={`w-full px-4 py-3 rounded-xl border text-sm transition-colors focus:outline-none focus:ring-2 ${
-                    errors.fullName
-                      ? 'border-rose-400 bg-rose-50/30 focus:ring-rose-400/20'
-                      : 'border-slate-200 focus:ring-teal-500/20 focus:border-teal-500'
-                  }`}
-                />
-                {errors.fullName && (
-                  <p className="text-xs text-rose-600 mt-1 flex items-center gap-1">
-                    <AlertCircle className="w-3.5 h-3.5" />
-                    <span>{errors.fullName}</span>
-                  </p>
-                )}
+                <p className="font-semibold">Анхааруулга</p>
+                <p className="text-xs sm:text-sm mt-0.5">{formError}</p>
               </div>
+            </div>
+          )}
 
-              {/* Contact (Phone or Email) */}
+          {submittedSuccess && !formError && (
+            <div className="p-4 rounded-2xl bg-blue-50 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800/60 flex items-start gap-3 text-[#123B63] dark:text-sky-200 text-sm">
+              <CheckCircle2 className="w-5 h-5 shrink-0 text-[#1769AA] dark:text-sky-400 mt-0.5" />
               <div>
-                <label htmlFor="contact" className="block text-xs sm:text-sm font-semibold text-slate-800 mb-1.5">
-                  Утасны дугаар эсвэл И-мэйл хаяг <span className="text-rose-500">*</span>
-                </label>
-                <input
-                  id="contact"
-                  type="text"
-                  placeholder="Жишээ: 99112233 эсвэл patient@example.com"
-                  value={formData.contact}
-                  onChange={(e) => setFormData({ ...formData, contact: e.target.value })}
-                  className={`w-full px-4 py-3 rounded-xl border text-sm transition-colors focus:outline-none focus:ring-2 ${
-                    errors.contact
-                      ? 'border-rose-400 bg-rose-50/30 focus:ring-rose-400/20'
-                      : 'border-slate-200 focus:ring-teal-500/20 focus:border-teal-500'
-                  }`}
-                />
-                {errors.contact && (
-                  <p className="text-xs text-rose-600 mt-1 flex items-center gap-1">
-                    <AlertCircle className="w-3.5 h-3.5" />
-                    <span>{errors.contact}</span>
-                  </p>
-                )}
+                <p className="font-semibold">Амжилттай илгээгдлээ!</p>
+                <p className="text-xs sm:text-sm mt-0.5">
+                  Таны санал хүсэлтийг хүлээн авч, эмнэлгийн захиргааны шууданд илгээлээ. Бид тантай удахгүй холбогдох болно.
+                </p>
               </div>
+            </div>
+          )}
 
-              {/* Category */}
-              <div>
-                <label htmlFor="category" className="block text-xs sm:text-sm font-semibold text-slate-800 mb-1.5">
-                  Санал хүсэлтийн төрөл
-                </label>
-                <select
-                  id="category"
-                  value={formData.category}
-                  onChange={(e) => setFormData({ ...formData, category: e.target.value as any })}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 bg-white"
-                >
-                  <option value="Санал хүсэлт">Санал хүсэлт</option>
-                  <option value="Үйлчилгээ лавлах">Үйлчилгээ лавлах</option>
-                  <option value="Цаг захиалгын тусламж">Цаг захиалгын тусламж</option>
-                  <option value="Талархал">Талархал</option>
-                </select>
-              </div>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label htmlFor="contact-name" className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                Таны нэр: <span className="text-rose-500">*</span>
+              </label>
+              <input
+                id="contact-name"
+                type="text"
+                required
+                value={name}
+                onChange={(e) => {
+                  setName(e.target.value);
+                  if (formError) setFormError(null);
+                }}
+                placeholder="Бүтэн овог нэрээ оруулна уу"
+                className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-[#1769AA]/20 focus:border-[#1769AA] bg-slate-50/50 dark:bg-slate-800 dark:text-white transition-all"
+              />
+            </div>
 
-              {/* Message */}
-              <div>
-                <label htmlFor="message" className="block text-xs sm:text-sm font-semibold text-slate-800 mb-1.5">
-                  Мессеж, санал хүсэлт <span className="text-rose-500">*</span>
-                </label>
-                <textarea
-                  id="message"
-                  rows={4}
-                  placeholder="Таны санал, сэтгэгдэл эсвэл асуулт..."
-                  value={formData.message}
-                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                  className={`w-full px-4 py-3 rounded-xl border text-sm transition-colors focus:outline-none focus:ring-2 resize-none ${
-                    errors.message
-                      ? 'border-rose-400 bg-rose-50/30 focus:ring-rose-400/20'
-                      : 'border-slate-200 focus:ring-teal-500/20 focus:border-teal-500'
-                  }`}
-                />
-                {errors.message && (
-                  <p className="text-xs text-rose-600 mt-1 flex items-center gap-1">
-                    <AlertCircle className="w-3.5 h-3.5" />
-                    <span>{errors.message}</span>
-                  </p>
-                )}
-              </div>
+            <div>
+              <label htmlFor="contact-info" className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                Утасны дугаар эсвэл И-мэйл: <span className="text-rose-500">*</span>
+              </label>
+              <input
+                id="contact-info"
+                type="text"
+                required
+                value={contact}
+                onChange={(e) => {
+                  setContact(e.target.value);
+                  if (formError) setFormError(null);
+                }}
+                placeholder="Жишээ: 88112233 эсвэл user@example.com"
+                className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-[#1769AA]/20 focus:border-[#1769AA] bg-slate-50/50 dark:bg-slate-800 dark:text-white transition-all"
+              />
+            </div>
 
-              {/* Privacy Consent Checkbox */}
-              <div className="pt-1">
-                <label className="flex items-start gap-2.5 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={formData.consent}
-                    onChange={(e) => setFormData({ ...formData, consent: e.target.checked })}
-                    className="w-4 h-4 mt-0.5 rounded border-slate-300 text-teal-600 focus:ring-teal-500"
-                  />
-                  <span className="text-xs text-slate-600 leading-snug">
-                    Би өөрийн холбоо барих мэдээллийг санал хүсэлтэд хариу өгөх зорилгоор эмнэлгийн захиргаанд боловсруулахыг зөвшөөрч байна.
-                  </span>
-                </label>
-                {errors.consent && (
-                  <p className="text-xs text-rose-600 mt-1 flex items-center gap-1">
-                    <AlertCircle className="w-3.5 h-3.5" />
-                    <span>{errors.consent}</span>
-                  </p>
-                )}
-              </div>
+            <div>
+              <label htmlFor="contact-message" className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                Санал хүсэлтийн утга: <span className="text-rose-500">*</span>
+              </label>
+              <textarea
+                id="contact-message"
+                required
+                rows={5}
+                value={message}
+                onChange={(e) => {
+                  setMessage(e.target.value);
+                  if (formError) setFormError(null);
+                }}
+                placeholder="Таны санал, сэтгэгдэл, асуулт эсвэл гомдол..."
+                className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-[#1769AA]/20 focus:border-[#1769AA] bg-slate-50/50 dark:bg-slate-800 dark:text-white transition-all resize-none"
+              />
+            </div>
 
-              {/* Submit Button */}
+            <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <span className="text-xs text-slate-500 dark:text-slate-400">
+                Бид таны мэдээллийг нууцлан хамгаална.
+              </span>
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-3.5 bg-teal-600 hover:bg-teal-700 disabled:bg-slate-300 text-white font-bold rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full sm:w-auto px-7 py-3 bg-[#1769AA] hover:bg-[#123B63] text-white font-bold text-sm rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? (
-                  <span>Илгээж байна...</span>
+                  <>
+                    <span className="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <span>Илгээж байна...</span>
+                  </>
                 ) : (
                   <>
                     <Send className="w-4 h-4" />
-                    <span>Санал хүсэлт илгээх</span>
+                    <span>Илгээх</span>
                   </>
                 )}
               </button>
-            </form>
-          )}
+            </div>
+          </form>
         </div>
 
-        {/* Right Column: Direct Contacts */}
+        {/* Right Column: Direct Contact & Action Cards */}
         <div className="lg:col-span-5 space-y-6">
-          <div className="bg-slate-900 text-white rounded-3xl p-6 sm:p-8 space-y-6">
-            <h3 className="text-xl font-bold tracking-tight">Шууд холбоо барих</h3>
+          {/* Direct Contact Card (Deep Blue Brand Gradient) */}
+          <div className="bg-gradient-to-br from-[#123B63] via-[#1769AA] to-[#0A2540] text-white rounded-3xl p-6 sm:p-8 shadow-xl relative overflow-hidden space-y-6">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-sky-400/10 rounded-full blur-3xl pointer-events-none" />
 
-            <div className="space-y-4 text-xs sm:text-sm">
-              <div className="flex items-start gap-3">
-                <div className="w-10 h-10 rounded-xl bg-teal-500/20 text-teal-400 flex items-center justify-center shrink-0">
-                  <Phone className="w-5 h-5" />
-                </div>
-                <div>
-                  <strong className="block text-slate-200">Лавлах утасны дугаарууд:</strong>
-                  <div className="space-y-1 mt-1 text-slate-300">
-                    <div>Төв эмнэлэг: <a href="tel:77056699" className="text-teal-400 font-mono font-bold hover:underline">7705-6699</a> / 7709-6699</div>
-                    <div>UBH салбар: <a href="tel:77066699" className="text-teal-400 font-mono font-bold hover:underline">7706-6699</a></div>
-                    <div>Хараа заслын төв: <a href="tel:77016699" className="text-teal-400 font-mono font-bold hover:underline">7701-6699</a></div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-3">
-                <div className="w-10 h-10 rounded-xl bg-teal-500/20 text-teal-400 flex items-center justify-center shrink-0">
-                  <Mail className="w-5 h-5" />
-                </div>
-                <div>
-                  <strong className="block text-slate-200">И-мэйл хаяг:</strong>
-                  <a href="mailto:contact@solongohospital.mn" className="text-teal-400 hover:underline">
-                    contact@solongohospital.mn
-                  </a>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-3">
-                <div className="w-10 h-10 rounded-xl bg-teal-500/20 text-teal-400 flex items-center justify-center shrink-0">
-                  <Clock className="w-5 h-5" />
-                </div>
-                <div>
-                  <strong className="block text-slate-200">Ажиллах цаг:</strong>
-                  <div className="text-slate-300 text-xs mt-1 space-y-0.5">
-                    <div>Даваа - Баасан: 08:30 - 16:30</div>
-                    <div>Бямба: 10:00 - 14:00 (Төв) / 09:00 - 17:00 (UBH)</div>
-                    <div>Ням: Амарна</div>
-                  </div>
-                </div>
-              </div>
+            <div className="relative space-y-2">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-sky-200 text-xs font-semibold border border-white/10">
+                <Sparkles className="w-3.5 h-3.5 text-sky-300" />
+                <span>Шуурхай холбоо</span>
+              </span>
+              <h3 className="text-xl sm:text-2xl font-bold text-white">
+                Шууд холбоо барих
+              </h3>
+              <p className="text-sky-100/80 text-xs sm:text-sm leading-relaxed">
+                Манай лавлах утсаар мэргэжлийн сувилагч, цаг захиалгын ажилтнуудтай шууд холбогдон зөвлөгөө авах боломжтой.
+              </p>
             </div>
 
-            <div className="pt-2 border-t border-slate-800">
-              <button
-                type="button"
-                onClick={onOpenAppointment}
-                className="w-full py-3 bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold rounded-xl text-center block transition-colors text-xs sm:text-sm cursor-pointer"
+            <div className="space-y-4 relative">
+              <a
+                href={`tel:${HOSPITAL_INFO.phonePrimary}`}
+                className="p-4 rounded-2xl bg-white/10 hover:bg-white/15 border border-white/15 transition-all flex items-center gap-4 block group"
               >
-                Эмчид цаг захиалах (Medsoft)
-              </button>
+                <div className="w-12 h-12 rounded-xl bg-sky-400/20 text-sky-200 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                  <Phone className="w-6 h-6 text-sky-300" />
+                </div>
+                <div>
+                  <p className="text-xs text-sky-200 font-medium">Нэгдсэн лавлах утас:</p>
+                  <p className="text-xl sm:text-2xl font-extrabold text-white tracking-wide">
+                    {HOSPITAL_INFO.phonePrimary}
+                  </p>
+                </div>
+              </a>
+
+              <a
+                href={`mailto:${HOSPITAL_INFO.email}`}
+                className="p-4 rounded-2xl bg-white/10 hover:bg-white/15 border border-white/15 transition-all flex items-center gap-4 block group"
+              >
+                <div className="w-12 h-12 rounded-xl bg-sky-400/20 text-sky-200 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                  <Mail className="w-6 h-6 text-sky-300" />
+                </div>
+                <div>
+                  <p className="text-xs text-sky-200 font-medium">Албан ёсны и-мэйл:</p>
+                  <p className="text-sm sm:text-base font-bold text-white break-all">
+                    {HOSPITAL_INFO.email}
+                  </p>
+                </div>
+              </a>
+            </div>
+
+            {/* Quick Online Booking Action */}
+            <div className="pt-2 border-t border-white/15 space-y-3">
+              <p className="text-xs text-sky-200">
+                Та онлайнаар Medsoft систем ашиглан үзлэгийн цаг авах боломжтой:
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <button
+                  type="button"
+                  onClick={onOpenAppointment}
+                  className="flex-1 py-3 px-4 bg-white text-[#123B63] hover:bg-sky-50 font-bold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <Calendar className="w-4 h-4 text-[#1769AA]" />
+                  <span>Цаг захиалах (Шууд)</span>
+                </button>
+                <a
+                  href={HOSPITAL_INFO.onlineBookingUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="py-3 px-4 bg-sky-500/20 hover:bg-sky-500/30 text-white font-bold text-xs rounded-xl border border-sky-400/30 transition-all flex items-center justify-center gap-1.5"
+                >
+                  <span>Medsoft систем</span>
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </a>
+              </div>
             </div>
           </div>
 
-          {/* Location summary note */}
-          <div className="bg-white rounded-2xl border border-slate-200/80 p-6 space-y-3">
-            <h4 className="font-bold text-slate-900 text-sm">Төв эмнэлгийн байршил</h4>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              Баянзүрх дүүрэг, 26-р хороо, Их хүрээ гудамж, Дүнжингарав худалдааны төвийн урд, Үндэсний цэцэрлэгт хүрээлэнгийн зүүн хойно, Санрайс (Sunrise) хотхон.
-            </p>
+          {/* Branches Summary Card */}
+          <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 p-6 space-y-4 shadow-xs">
+            <div className="flex items-center gap-2">
+              <Building className="w-5 h-5 text-[#1769AA] dark:text-sky-400" />
+              <h4 className="font-bold text-slate-900 dark:text-white text-base">
+                Манай салбарууд
+              </h4>
+            </div>
+
+            <div className="space-y-3 text-xs sm:text-sm">
+              {BRANCHES.map((b) => (
+                <div
+                  key={b.id}
+                  className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60 space-y-1"
+                >
+                  <p className="font-bold text-slate-900 dark:text-white">
+                    {b.name}
+                  </p>
+                  <p className="text-slate-500 dark:text-slate-400 text-xs">
+                    {b.address}
+                  </p>
+                  <div className="flex items-center justify-between pt-1 text-xs text-[#1769AA] dark:text-sky-400 font-semibold">
+                    <span>Утас: {b.phones.join(', ')}</span>
+                    <span className="text-slate-500 dark:text-slate-400 font-normal">
+                      {b.hours.weekdays}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>

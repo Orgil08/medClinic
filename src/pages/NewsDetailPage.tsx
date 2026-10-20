@@ -14,7 +14,7 @@ export const NewsDetailPage: React.FC = () => {
         <p className="text-slate-600 text-sm">Таны хайсан мэдээллийн хуудас олдсонгүй.</p>
         <Link
           to="/news"
-          className="inline-flex items-center gap-2 px-6 py-2.5 bg-teal-600 text-white rounded-xl font-semibold text-sm"
+          className="inline-flex items-center gap-2 px-6 py-2.5 bg-[#1769AA] hover:bg-[#123B63] text-white rounded-xl font-semibold text-sm transition-colors shadow-sm"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Бүх мэдээ рүү буцах</span>
@@ -31,7 +31,7 @@ export const NewsDetailPage: React.FC = () => {
       <div>
         <Link
           to="/news"
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-teal-700 hover:text-teal-800"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#1769AA] dark:text-sky-400 hover:text-[#123B63]"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Бүх мэдээ рүү буцах</span>
@@ -41,49 +41,49 @@ export const NewsDetailPage: React.FC = () => {
       {/* Article Header */}
       <div className="space-y-4">
         <div className="flex flex-wrap items-center gap-3 text-xs">
-          <span className="px-3 py-1 rounded-full font-bold bg-teal-50 text-teal-800">
+          <span className="px-3 py-1 rounded-full font-bold bg-blue-50 dark:bg-blue-950/60 text-[#1769AA] dark:text-sky-300 border border-blue-200/60 dark:border-blue-900/60">
             {news.category}
           </span>
-          <div className="flex items-center gap-1.5 text-slate-500 font-mono">
+          <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 font-mono">
             <Calendar className="w-3.5 h-3.5" />
             <span>{news.publishedDate}</span>
           </div>
-          <span className="text-slate-300">•</span>
-          <div className="flex items-center gap-1.5 text-slate-500">
+          <span className="text-slate-300 dark:text-slate-700">•</span>
+          <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
             <Clock className="w-3.5 h-3.5" />
             <span>Унших хугацаа: {news.readTime}</span>
           </div>
         </div>
 
-        <h1 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
+        <h1 className="text-2xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
           {news.title}
         </h1>
 
-        <div className="flex items-center gap-2 text-xs text-slate-600 pt-2 border-b border-slate-100 pb-4">
+        <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400 pt-2 border-b border-slate-100 dark:border-slate-800 pb-4">
           <User className="w-4 h-4 text-slate-400" />
           <span>Нийтэлсэн: <strong>{news.author}</strong></span>
         </div>
       </div>
 
       {/* Lead summary */}
-      <div className="p-6 bg-slate-50 rounded-2xl border-l-4 border-teal-500 text-slate-800 font-medium text-sm sm:text-base leading-relaxed">
+      <div className="p-6 bg-blue-50/50 dark:bg-slate-900 rounded-2xl border-l-4 border-[#1769AA] text-slate-800 dark:text-slate-200 font-medium text-sm sm:text-base leading-relaxed">
         {news.summary}
       </div>
 
       {/* Main Body */}
-      <div className="space-y-6 text-slate-700 text-base leading-relaxed">
+      <div className="space-y-6 text-slate-700 dark:text-slate-300 text-base leading-relaxed">
         {news.content.map((paragraph, idx) => (
           <p key={idx}>{paragraph}</p>
         ))}
       </div>
 
       {/* Tags */}
-      <div className="pt-6 border-t border-slate-200 flex flex-wrap items-center gap-2">
+      <div className="pt-6 border-t border-slate-200 dark:border-slate-800 flex flex-wrap items-center gap-2">
         <Tag className="w-4 h-4 text-slate-400 mr-1" />
         {news.tags.map((tag, idx) => (
           <span
             key={idx}
-            className="text-xs px-3 py-1 bg-slate-100 rounded-lg text-slate-700 font-medium"
+            className="text-xs px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-lg text-slate-700 dark:text-slate-300 font-medium"
           >
             #{tag}
           </span>
@@ -92,18 +92,18 @@ export const NewsDetailPage: React.FC = () => {
 
       {/* Related News */}
       {relatedNews.length > 0 && (
-        <div className="pt-8 border-t border-slate-200 space-y-4">
-          <h3 className="font-bold text-slate-900 text-lg">Бусад мэдээ, зарлал</h3>
+        <div className="pt-8 border-t border-slate-200 dark:border-slate-800 space-y-4">
+          <h3 className="font-bold text-slate-900 dark:text-white text-lg">Бусад мэдээ, зарлал</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {relatedNews.map((rn) => (
               <Link
                 key={rn.id}
                 to={`/news/${rn.slug}`}
-                className="p-5 bg-white rounded-2xl border border-slate-200 hover:border-teal-500 transition-all flex flex-col justify-between space-y-2 group"
+                className="p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-[#1769AA] transition-all flex flex-col justify-between space-y-2 group"
               >
                 <div>
-                  <span className="text-[10px] font-bold text-teal-700 uppercase">{rn.category}</span>
-                  <h4 className="font-bold text-slate-900 text-sm group-hover:text-teal-700 transition-colors line-clamp-2">
+                  <span className="text-[10px] font-bold text-[#1769AA] dark:text-sky-400 uppercase">{rn.category}</span>
+                  <h4 className="font-bold text-slate-900 dark:text-white text-sm group-hover:text-[#1769AA] dark:group-hover:text-sky-400 transition-colors line-clamp-2">
                     {rn.title}
                   </h4>
                 </div>

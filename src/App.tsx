@@ -8,6 +8,9 @@ import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { Header } from './components/Header.tsx';
 import { Footer } from './components/Footer.tsx';
 import { AppointmentModal } from './components/AppointmentModal.tsx';
+import { ToastProvider } from './context/ToastContext.tsx';
+import { ThemeProvider } from './context/ThemeContext.tsx';
+import { BackToTop } from './components/BackToTop.tsx';
 import { HomePage } from './pages/HomePage.tsx';
 import { AboutPage } from './pages/AboutPage.tsx';
 import { HistoryPage } from './pages/HistoryPage.tsx';
@@ -38,66 +41,76 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <ScrollToTop />
-      <div className="min-h-screen flex flex-col bg-slate-50 text-slate-800 font-sans">
-        {/* Navigation Header */}
-        <Header onOpenAppointment={() => setAppointmentModalOpen(true)} />
+      <ThemeProvider>
+        <ToastProvider position="bottom-right">
+          <ScrollToTop />
+          <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans transition-colors duration-200">
+          {/* Navigation Header */}
+          <Header onOpenAppointment={() => setAppointmentModalOpen(true)} />
 
-        {/* Page Content */}
-        <main className="flex-1">
-          <Routes>
-            <Route
-              path="/"
-              element={<HomePage onOpenAppointment={() => setAppointmentModalOpen(true)} />}
-            />
-            <Route
-              path="/about"
-              element={<AboutPage onOpenAppointment={() => setAppointmentModalOpen(true)} />}
-            />
-            <Route
-              path="/about/history"
-              element={<HistoryPage onOpenAppointment={() => setAppointmentModalOpen(true)} />}
-            />
-            <Route
-              path="/services"
-              element={<ServicesPage onOpenAppointment={() => setAppointmentModalOpen(true)} />}
-            />
-            <Route
-              path="/services/:slug"
-              element={<ServiceDetailPage onOpenAppointment={() => setAppointmentModalOpen(true)} />}
-            />
-            <Route
-              path="/doctors"
-              element={<DoctorsPage onOpenAppointment={() => setAppointmentModalOpen(true)} />}
-            />
-            <Route path="/news" element={<NewsPage />} />
-            <Route path="/news/:slug" element={<NewsDetailPage />} />
-            <Route path="/advice" element={<AdvicePage />} />
-            <Route
-              path="/branches"
-              element={<BranchesPage onOpenAppointment={() => setAppointmentModalOpen(true)} />}
-            />
-            <Route
-              path="/contact"
-              element={<ContactPage onOpenAppointment={() => setAppointmentModalOpen(true)} />}
-            />
-            <Route path="/privacy" element={<PrivacyPage />} />
-            <Route
-              path="*"
-              element={<NotFoundPage onOpenAppointment={() => setAppointmentModalOpen(true)} />}
-            />
-          </Routes>
-        </main>
+          {/* Page Content */}
+          <main className="flex-1">
+            <Routes>
+              <Route
+                path="/"
+                element={<HomePage onOpenAppointment={() => setAppointmentModalOpen(true)} />}
+              />
+              <Route
+                path="/about"
+                element={<AboutPage onOpenAppointment={() => setAppointmentModalOpen(true)} />}
+              />
+              <Route
+                path="/about/history"
+                element={<HistoryPage onOpenAppointment={() => setAppointmentModalOpen(true)} />}
+              />
+              <Route
+                path="/services"
+                element={<ServicesPage onOpenAppointment={() => setAppointmentModalOpen(true)} />}
+              />
+              <Route
+                path="/services/:slug"
+                element={<ServiceDetailPage onOpenAppointment={() => setAppointmentModalOpen(true)} />}
+              />
+              <Route
+                path="/doctors"
+                element={<DoctorsPage onOpenAppointment={() => setAppointmentModalOpen(true)} />}
+              />
+              <Route path="/news" element={<NewsPage />} />
+              <Route path="/news/:slug" element={<NewsDetailPage />} />
+              <Route
+                path="/advice"
+                element={<AdvicePage onOpenAppointment={() => setAppointmentModalOpen(true)} />}
+              />
+              <Route
+                path="/branches"
+                element={<BranchesPage onOpenAppointment={() => setAppointmentModalOpen(true)} />}
+              />
+              <Route
+                path="/contact"
+                element={<ContactPage onOpenAppointment={() => setAppointmentModalOpen(true)} />}
+              />
+              <Route path="/privacy" element={<PrivacyPage />} />
+              <Route
+                path="*"
+                element={<NotFoundPage onOpenAppointment={() => setAppointmentModalOpen(true)} />}
+              />
+            </Routes>
+          </main>
 
-        {/* Footer */}
-        <Footer onOpenAppointment={() => setAppointmentModalOpen(true)} />
+          {/* Footer */}
+          <Footer onOpenAppointment={() => setAppointmentModalOpen(true)} />
 
-        {/* Global Online Appointment Modal */}
-        <AppointmentModal
-          isOpen={appointmentModalOpen}
-          onClose={() => setAppointmentModalOpen(false)}
-        />
-      </div>
-    </BrowserRouter>
+          {/* Global Online Appointment Modal */}
+          <AppointmentModal
+            isOpen={appointmentModalOpen}
+            onClose={() => setAppointmentModalOpen(false)}
+          />
+
+          {/* Dedicated Back To Top Floating Action Button */}
+          <BackToTop />
+        </div>
+      </ToastProvider>
+    </ThemeProvider>
+  </BrowserRouter>
   );
 }
